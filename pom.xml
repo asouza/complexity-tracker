@@ -20,6 +20,15 @@
 	</properties>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/br.com.aniche/ck -->
+		<!-- https://mvnrepository.com/artifact/com.github.mauricioaniche/ck -->
+		<dependency>
+			<groupId>com.github.mauricioaniche</groupId>
+			<artifactId>ck</artifactId>
+			<version>0.6.3-SNAPSHOT</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>org.repodriller</groupId>
 			<artifactId>repodriller</artifactId>
