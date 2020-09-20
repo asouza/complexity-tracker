@@ -2,6 +2,8 @@ package com.deveficiente.complexitytracker;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -47,6 +49,7 @@ public class ComplexityTrackerApplication {
 		 */
 
 		tx.execute(status -> {
+			ArrayList<ComplexityHistory> list = new ArrayList<>();
 			new RepoDriller().start(() -> {
 				new RepositoryMining()
 						.in(GitRepository.singleProject(
@@ -57,9 +60,11 @@ public class ComplexityTrackerApplication {
 								"6ce7a80199e2fde9a4eeae6f1793188e6c3fd007",
 								"f74be96dada91d6d15cc7c3954050e4133de16bf",
 								"6e0f2a66647a6471db1df01ac133435ef03dae66")))
-						.process(new DevelopersVisitor(manager,"ssp"), new NoPersistence())
+						.process(new DevelopersVisitor(list,"ssp"), new NoPersistence())
 						.mine();
-			});			
+			});		
+			
+			list.forEach(manager :: persist);
 			return null;
 		});
 
@@ -67,11 +72,11 @@ public class ComplexityTrackerApplication {
 
 	static class DevelopersVisitor implements CommitVisitor {
 
-		private EntityManager manager;
 		private String projectId;
+		private Collection<ComplexityHistory> history;
 
-		public DevelopersVisitor(EntityManager manager,String projectId) {
-			this.manager = manager;
+		public DevelopersVisitor(Collection<ComplexityHistory> history,String projectId) {
+			this.history = history;
 			this.projectId = projectId;
 		}
 
@@ -92,9 +97,11 @@ public class ComplexityTrackerApplication {
 						.call();			
 
 				CK ck = new CK(false, 0, false);
-				ck.calculate(folderToInspect, result -> {					
-					manager.persist(new ComplexityHistory(projectId,commit,result));
-					System.out.println("salvando...");
+				ck.calculate(folderToInspect, result -> {
+					//roda numa thread separada...
+					ComplexityHistory newHistory = new ComplexityHistory(projectId,commit,result);
+					history.add(newHistory);
+					System.out.println("salvando... "+newHistory);
 				});
 			} catch (IOException | GitAPIException e) {
 				// TODO Auto-generated catch block
