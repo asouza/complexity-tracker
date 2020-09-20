@@ -2,6 +2,10 @@ package com.deveficiente.complexitytracker;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -14,48 +18,62 @@ import org.repodriller.persistence.PersistenceMechanism;
 import org.repodriller.scm.CommitVisitor;
 import org.repodriller.scm.GitRepository;
 import org.repodriller.scm.SCMRepository;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.github.mauricioaniche.ck.CK;
-import com.sun.tools.javac.util.List;
 
 @SpringBootApplication
 public class ComplexityTrackerApplication {
 
 	public static void main(String[] args) {
-		// SpringApplication.run(ComplexityTrackerApplication.class, args);
+		 ConfigurableApplicationContext spring = SpringApplication.run(ComplexityTrackerApplication.class, args);
+		 EntityManager manager = spring.getBean(EntityManager.class);
+		 TransactionTemplate tx = spring.getBean(TransactionTemplate.class);
+		 
 		/*
 		 * - preciso entrar num repositório
 		 * 
-		 * - ir para o primeiro commit - escolher um conjunto de classes -
-		 * analisar o número de linhas de código das classes - vai para o último
-		 * commit - analisa o número de linhas das classes de novo - armazena
-		 * essas informações para plotar depois
+		 * - ir para o primeiro commit 
+		 * - escolher um conjunto de classes 
+		 * - analisar o número de linhas de código das classes 
+		 * - vai para o último commit 
+		 * - analisa o número de linhas das classes de novo 
+		 * - armazena o commit, data, classe, linhas, projeto
+		 * - essas informações para plotar depois
 		 * 
 		 */
-		
-		// 6ce7a80199e2fde9a4eeae6f1793188e6c3fd007 (comeco)
-		// f74be96dada91d6d15cc7c3954050e4133de16bf (primeiro release)
-		// 6e0f2a66647a6471db1df01ac133435ef03dae66 (atual)
-		/// Users/albertoluizsouza/ambiente/projetos/SSP
-		
-		new RepoDriller().start(() -> {
-			new RepositoryMining()
-					.in(GitRepository.singleProject(
-							"/Users/albertoluizsouza/ambiente/projetos/SSP"))
-					// ultimo commit da tag v3.0.0.M1
 
-					.through(Commits.list(List.of(
-							"6ce7a80199e2fde9a4eeae6f1793188e6c3fd007",
-							"f74be96dada91d6d15cc7c3954050e4133de16bf",
-							"6e0f2a66647a6471db1df01ac133435ef03dae66")))
-					.process(new DevelopersVisitor(), new NoPersistence())
-					.mine();
+		tx.execute(status -> {
+			new RepoDriller().start(() -> {
+				new RepositoryMining()
+						.in(GitRepository.singleProject(
+								"/Users/albertoluizsouza/ambiente/projetos/SSP"))
+						// ultimo commit da tag v3.0.0.M1
+
+						.through(Commits.list(List.of(
+								"6ce7a80199e2fde9a4eeae6f1793188e6c3fd007",
+								"f74be96dada91d6d15cc7c3954050e4133de16bf",
+								"6e0f2a66647a6471db1df01ac133435ef03dae66")))
+						.process(new DevelopersVisitor(manager,"ssp"), new NoPersistence())
+						.mine();
+			});			
+			return null;
 		});
 
 	}
 
 	static class DevelopersVisitor implements CommitVisitor {
+
+		private EntityManager manager;
+		private String projectId;
+
+		public DevelopersVisitor(EntityManager manager,String projectId) {
+			this.manager = manager;
+			this.projectId = projectId;
+		}
 
 		@Override
 		public void process(SCMRepository repo, Commit commit,
@@ -74,9 +92,9 @@ public class ComplexityTrackerApplication {
 						.call();			
 
 				CK ck = new CK(false, 0, false);
-				ck.calculate(folderToInspect, result -> {
-					System.out.println("Classe :" + result.getClassName());
-					System.out.println("LOC :" + result.getLoc());
+				ck.calculate(folderToInspect, result -> {					
+					manager.persist(new ComplexityHistory(projectId,commit,result));
+					System.out.println("salvando...");
 				});
 			} catch (IOException | GitAPIException e) {
 				// TODO Auto-generated catch block
