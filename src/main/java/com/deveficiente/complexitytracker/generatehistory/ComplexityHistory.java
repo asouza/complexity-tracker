@@ -23,6 +23,9 @@ public class ComplexityHistory {
 	private LocalDateTime commitDate;
 	private String className;
 	private int loc;
+	private int wmc;
+	private int lcom;
+	private int cbo;
 
 	public ComplexityHistory(String projectId, Commit commit,
 			CKClassResult result) {
@@ -32,6 +35,9 @@ public class ComplexityHistory {
 				ZoneId.systemDefault());
 		this.className = result.getClassName();
 		this.loc = result.getLoc();
+		this.wmc = result.getWmc();
+		this.lcom = result.getLcom();
+		this.cbo = result.getCbo();
 	}
 	
 	
