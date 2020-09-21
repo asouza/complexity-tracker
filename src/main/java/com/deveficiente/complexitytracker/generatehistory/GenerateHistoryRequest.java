@@ -1,4 +1,4 @@
-package com.deveficiente.complexitytracker;
+package com.deveficiente.complexitytracker.generatehistory;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -20,6 +20,12 @@
 	</properties>
 
 	<dependencies>
+		<!--View -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>	
+	
 		<!-- https://mvnrepository.com/artifact/br.com.aniche/ck -->
 		<!-- https://mvnrepository.com/artifact/com.github.mauricioaniche/ck -->
 		<dependency>
