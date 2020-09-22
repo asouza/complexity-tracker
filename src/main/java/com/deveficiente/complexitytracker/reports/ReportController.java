@@ -1,9 +1,12 @@
 package com.deveficiente.complexitytracker.reports;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ReportController {
@@ -24,5 +27,12 @@ public class ReportController {
 		model.addAttribute("dataUrl","/reports/data/complexity-by-class?projectId="+projectId);
 		return "complexity-by-class";
 	}
+	
+//	@GetMapping(value = "/reports/data/complexity-by-class")
+//	@ResponseBody
+//	public List<ComplexyMetricPerClassBarItem> shoComplexyByByClass(@RequestParam String projectId) {
+//		
+//		return "complexity-by-class";
+//	}
 
 }

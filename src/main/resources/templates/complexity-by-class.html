@@ -10,7 +10,42 @@
 
 <script th:inline="javascript" th:if="${dataUrl}">
 
-const dataUrl = '[(${dataUrl})]';
+var ctx = document.getElementById("myChart").getContext("2d");
+
+var data = {
+  labels: ["Commit 1", "Commit 2", "Commit 3"],
+  datasets: [{
+    label: "CBO",
+    backgroundColor: "blue",
+    data: [3, 7, 9]
+  }, {
+    label: "WMC",
+    backgroundColor: "red",
+    data: [4, 6, 8]
+  }, {
+    label: "LCOM",
+    backgroundColor: "green",
+    data: [5, 15, 20]
+  }]
+};
+
+var myBarChart = new Chart(ctx, {
+  type: 'bar',
+  data: data,
+  options: {
+    barValueSpacing: 20,
+    scales: {
+      yAxes: [{
+        ticks: {
+          min: 0,
+        }
+      }]
+    }
+  }
+});
+
+
+/* const dataUrl = '[(${dataUrl})]';
 var ctx = document.getElementById("myChart");
 
 fetch(dataUrl)
@@ -21,8 +56,8 @@ fetch(dataUrl)
 		    data: {
 		        labels: info.labels,
 		        datasets: [{
-		            label: 'metrics',
-		            data: info.values		            
+		            label: 'notas',
+		            data: info.values,		            
 		        }]
 		    },
 		    options: {
@@ -45,7 +80,7 @@ fetch(dataUrl)
 				}
 		    }
 		});		
-	 });	
+	 });	 */
 </script>
 </body>
 </html>
