@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">    
+    <script src="/Chart.bundle.min.js"></script>    
+</head>
+<body>		
+	<canvas id="myChart"></canvas>	
+
+<script th:inline="javascript" th:if="${dataUrl}">
+
+const dataUrl = '[(${dataUrl})]';
+var ctx = document.getElementById("myChart");
+
+fetch(dataUrl)
+	.then(res => res.json())
+	.then(info => {
+		var myChart = new Chart(ctx, {
+		    type: 'bar',
+		    data: {
+		        labels: info.labels,
+		        datasets: [{
+		            label: 'metrics',
+		            data: info.values		            
+		        }]
+		    },
+		    options: {
+		        scales: {
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero:true
+		                }
+		            }]
+		        },
+				plugins: {
+					datalabels: {
+						color: 'black',
+						anchor:'end',
+						align:'start',
+						font: {
+							size: 18
+						}
+					}
+				}
+		    }
+		});		
+	 });	
+</script>
+</body>
+</html>
