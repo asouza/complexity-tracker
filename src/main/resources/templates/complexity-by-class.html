@@ -10,7 +10,7 @@
 
 <script th:inline="javascript" th:if="${dataUrl}">
 
-var ctx = document.getElementById("myChart").getContext("2d");
+/* var ctx = document.getElementById("myChart").getContext("2d");
 
 var data = {
   labels: ["Commit 1", "Commit 2", "Commit 3"],
@@ -42,10 +42,10 @@ var myBarChart = new Chart(ctx, {
       }]
     }
   }
-});
+}); */
 
 
-/* const dataUrl = '[(${dataUrl})]';
+const dataUrl = '[(${dataUrl})]';
 var ctx = document.getElementById("myChart");
 
 fetch(dataUrl)
@@ -55,10 +55,7 @@ fetch(dataUrl)
 		    type: 'bar',
 		    data: {
 		        labels: info.labels,
-		        datasets: [{
-		            label: 'notas',
-		            data: info.values,		            
-		        }]
+		        datasets: info.datasets
 		    },
 		    options: {
 		        scales: {
@@ -80,7 +77,7 @@ fetch(dataUrl)
 				}
 		    }
 		});		
-	 });	 */
+	 });
 </script>
 </body>
 </html>

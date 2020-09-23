@@ -26,6 +26,11 @@ public class ComplexityHistory {
 	private int wmc;
 	private int lcom;
 	private int cbo;
+	
+	@Deprecated
+	public ComplexityHistory() {
+
+	}
 
 	public ComplexityHistory(String projectId, Commit commit,
 			CKClassResult result) {
@@ -40,7 +45,25 @@ public class ComplexityHistory {
 		this.cbo = result.getCbo();
 	}
 	
+	public String getHash() {
+		return hash;
+	}
 	
+	public int getCbo() {
+		return cbo;
+	}
+	
+	public int getLcom() {
+		return lcom;
+	}
+	
+	public int getWmc() {
+		return wmc;
+	}
+	
+	public int getLoc() {
+		return loc;
+	}
 
 	@Override
 	public int hashCode() {
