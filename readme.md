@@ -11,7 +11,10 @@ At this this time only java project can be analyzed.
 
 * Clone the project
 * You should have java and mysql installed
+* Clone https://github.com/mauricioaniche/ck
+  * After cloned, you need to execute mvn install --skipTests
 * Go to application.properties and change username and password :P
+* Run com.deveficiente.complexitytracker.ComplexityTrackerApplication
 * Send a post for http://localhost:8080/generate-history with:
   * commitHashes - commit hashes splited by commas. Ex: f74be96dada91d6d15cc7c3954050e4133de16bf,5ab12e1ffdff4254f164c0d963661af9db5f0d9e
   * projectId - identifier that you choose for the project being imported
