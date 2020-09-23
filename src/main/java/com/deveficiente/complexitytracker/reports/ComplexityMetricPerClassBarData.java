@@ -1,5 +1,6 @@
 package com.deveficiente.complexitytracker.reports;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -13,7 +14,9 @@ public class ComplexityMetricPerClassBarData {
 	private List<BarGroupedDataSet> datasets = new ArrayList<>();
 
 	public ComplexityMetricPerClassBarData(List<ComplexityHistory> history) {
-		this.labels.addAll(history.stream().map(ComplexityHistory::getHash)
+		this.labels.addAll(history.stream()
+				.map(ComplexityHistory::getCommitDate)
+				.map(date -> date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
 				.collect(Collectors.toCollection(() -> new LinkedHashSet<>())));
 		
 		List<Integer> cbos = history.stream()

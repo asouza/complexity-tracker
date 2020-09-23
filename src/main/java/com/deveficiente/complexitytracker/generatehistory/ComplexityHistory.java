@@ -45,6 +45,10 @@ public class ComplexityHistory {
 		this.cbo = result.getCbo();
 	}
 	
+	public LocalDateTime getCommitDate() {
+		return commitDate;
+	}
+	
 	public String getHash() {
 		return hash;
 	}
