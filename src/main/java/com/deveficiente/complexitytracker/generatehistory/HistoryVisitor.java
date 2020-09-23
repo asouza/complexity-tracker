@@ -2,6 +2,7 @@ package com.deveficiente.complexitytracker.generatehistory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.apache.log4j.spi.LoggerFactory;
 import org.apache.logging.log4j.LogManager;
@@ -20,11 +21,19 @@ class HistoryVisitor implements CommitVisitor {
 
 	private String projectId;
 	
+	private String customPathToInspect;
 	private static final Logger log = LogManager
 			.getLogger(HistoryVisitor.class);
 
 
-	public HistoryVisitor(String projectId) {
+
+	/**
+	 * 
+	 * @param projectId id to be assigned to history
+	 * @param customPathToInspect path which should be analyzed inside the project. Ex: src/main/java/...
+	 */
+	public HistoryVisitor(String projectId,String customPathToInspect) {
+		this.customPathToInspect = customPathToInspect;
 		Assert.hasText(projectId,"Project id must not be empty");
 		this.projectId = projectId;
 	}
@@ -35,8 +44,8 @@ class HistoryVisitor implements CommitVisitor {
 
 		log.info("===============process({}) ===================",commit.getHash());
 		System.out.println("===============process("+commit.getHash()+") ===================");
-		String folderToInspect = repo.getPath()
-				+ "/src/main/java/org/jasig/ssp/service/impl";
+		String folderToInspect = repo.getPath() + "/"
+				+ customPathToInspect;
 		log.debug("Folder to inpsect {}",folderToInspect);
 		
 		try {

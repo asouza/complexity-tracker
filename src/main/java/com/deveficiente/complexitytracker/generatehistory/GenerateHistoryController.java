@@ -53,7 +53,7 @@ public class GenerateHistoryController {
 					.in(GitRepository.singleProject(request.getLocalGitPath()))
 					.through(Commits.list(hashes))
 					// 1
-					.process(new HistoryVisitor(request.getProjectId()),
+					.process(new HistoryVisitor(request.getProjectId(),request.getJavaFilesFolderPath()),
 							inMemoryWriter)
 					.mine();
 		});

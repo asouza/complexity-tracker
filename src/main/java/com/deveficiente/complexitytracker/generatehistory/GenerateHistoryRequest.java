@@ -32,6 +32,10 @@ public class GenerateHistoryRequest {
 		this.javaFilesFolderPath = javaFilesFolderPath;
 	}
 	
+	public String getJavaFilesFolderPath() {
+		return javaFilesFolderPath;
+	}
+	
 	public String getLocalGitPath() {
 		return localGitPath;
 	}
