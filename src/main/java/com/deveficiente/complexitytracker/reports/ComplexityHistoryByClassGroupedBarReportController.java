@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.deveficiente.complexitytracker.generatehistory.ComplexityHistory;
 
 @Controller
+//2
 public class ComplexityHistoryByClassGroupedBarReportController {
 
 	@PersistenceContext
@@ -33,6 +34,7 @@ public class ComplexityHistoryByClassGroupedBarReportController {
 
 	@GetMapping(value = "/reports/pages/complexity-by-class")
 	public String step1(Model model,
+			//1
 			SearchComplexityHistoryByClassRequest request) {
 		model.addAttribute("classes", manager.createQuery(
 				"select c.className from ComplexityHistory c where c.projectId = :projectId group by c.className order by sum(c.loc) desc")
@@ -51,6 +53,7 @@ public class ComplexityHistoryByClassGroupedBarReportController {
 
 	@GetMapping(value = "/reports/data/complexity-by-class")
 	@ResponseBody
+	//1
 	public ComplexityMetricPerClassBarData shoComplexyByByClass(
 			@Valid SearchComplexityHistoryByClassRequest request) {
 		List<ComplexityHistory> history = manager

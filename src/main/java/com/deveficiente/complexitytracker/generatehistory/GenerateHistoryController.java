@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
+//6
 public class GenerateHistoryController {
 
 	@Autowired
@@ -44,26 +45,26 @@ public class GenerateHistoryController {
 		log.debug("Let's generate history for {} commits {} ", hashes.size(),
 				hashes);
 
-		// 2
+		// 1
 		InMemoryComplexityHistoryWriter inMemoryWriter = new InMemoryComplexityHistoryWriter();
-		// 3
+		// 1
 		new RepoDriller().start(() -> {
 			new RepositoryMining()
 					.in(GitRepository.singleProject(request.getLocalGitPath()))
 					.through(Commits.list(hashes))
-					// 4
+					// 1
 					.process(new HistoryVisitor(request.getProjectId()),
 							inMemoryWriter)
 					.mine();
 		});
 
-		// 5
+		// 1
 		tx.executeWithoutResult(status -> {
 			manager.createQuery(
 					"delete from ComplexityHistory c where c.projectId = :projectId")
 					.setParameter("projectId", request.getProjectId())
 					.executeUpdate();
-			// 6
+			// 1
 			inMemoryWriter.getHistory().forEach(manager::persist);
 		});
 
