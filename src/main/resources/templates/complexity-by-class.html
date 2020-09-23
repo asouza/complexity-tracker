@@ -6,44 +6,26 @@
     <script src="/Chart.bundle.min.js"></script>    
 </head>
 <body>		
+	<section>
+	<form th:action="@{/reports/search/complexity-by-class}" th:object="${searchComplexityHistoryByClassRequest}" method="get">
+	
+	
+        <input type="hidden" th:field="*{projectId}"/>
+        
+        <div class="form-group">
+            <label class="font-weight-bold" for="time">Classes ordered by loc metric</label>
+            <select th:errorclass="is-invalid" class="form-control" name="className" th:field="*{className}" required>                
+                <option th:each="klass : ${classes}" th:value="${klass}" th:text="${klass}"/>
+            </select>
+            <span class="text-danger" th:if="${#fields.hasErrors('className')}" th:errors="*{className}"></span>            			           
+        </div>        
+        	
+        <button class="btn btn-block btn-info">Choose</button>
+	</form>	
+	</section>
 	<canvas id="myChart"></canvas>	
 
 <script th:inline="javascript" th:if="${dataUrl}">
-
-/* var ctx = document.getElementById("myChart").getContext("2d");
-
-var data = {
-  labels: ["Commit 1", "Commit 2", "Commit 3"],
-  datasets: [{
-    label: "CBO",
-    backgroundColor: "blue",
-    data: [3, 7, 9]
-  }, {
-    label: "WMC",
-    backgroundColor: "red",
-    data: [4, 6, 8]
-  }, {
-    label: "LCOM",
-    backgroundColor: "green",
-    data: [5, 15, 20]
-  }]
-};
-
-var myBarChart = new Chart(ctx, {
-  type: 'bar',
-  data: data,
-  options: {
-    barValueSpacing: 20,
-    scales: {
-      yAxes: [{
-        ticks: {
-          min: 0,
-        }
-      }]
-    }
-  }
-}); */
-
 
 const dataUrl = '[(${dataUrl})]';
 var ctx = document.getElementById("myChart");

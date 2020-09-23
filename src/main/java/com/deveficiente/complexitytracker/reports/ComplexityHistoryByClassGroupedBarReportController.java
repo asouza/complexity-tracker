@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.deveficiente.complexitytracker.generatehistory.ComplexityHistory;
 
 @Controller
-public class ReportController {
+public class ComplexityHistoryByClassGroupedBarReportController {
 
 	@PersistenceContext
 	private EntityManager manager;
@@ -32,27 +32,37 @@ public class ReportController {
 	 */
 
 	@GetMapping(value = "/reports/pages/complexity-by-class")
-	public String step1ShowPageComplexyByByClass(Model model,
-			@RequestParam String projectId) {
-		model.addAttribute("dataUrl",
-				"/reports/data/complexity-by-class?projectId=ssp&className=org.jasig.ssp.service.impl.EarlyAlertServiceImpl");
+	public String step1(Model model,
+			SearchComplexityHistoryByClassRequest request) {
+		model.addAttribute("classes", manager.createQuery(
+				"select c.className from ComplexityHistory c where c.projectId = :projectId group by c.className order by sum(c.loc) desc")
+				.setParameter("projectId", request.getProjectId())
+				.getResultList());
 		return "complexity-by-class";
+	}
+	
+	@GetMapping(value = "/reports/search/complexity-by-class")
+	public String step2(Model model,
+			@Valid SearchComplexityHistoryByClassRequest request) {
+		model.addAttribute("dataUrl",
+				"/reports/data/complexity-by-class?projectId="+request.getProjectId()+"&className="+request.getClassName());
+		return step1(model, request);
 	}
 
 	@GetMapping(value = "/reports/data/complexity-by-class")
 	@ResponseBody
 	public ComplexityMetricPerClassBarData shoComplexyByByClass(
 			@Valid SearchComplexityHistoryByClassRequest request) {
-		List<ComplexityHistory> history = manager.createQuery(
-				"select c from ComplexityHistory c "
-				+ "where c.projectId=:projectId and "
-				+ "c.className=:className "
-				+ "order by c.commitDate asc",
-				ComplexityHistory.class).
-				setParameter("projectId", request.getProjectId())
+		List<ComplexityHistory> history = manager
+				.createQuery(
+						"select c from ComplexityHistory c "
+								+ "where c.projectId=:projectId and "
+								+ "c.className=:className "
+								+ "order by c.commitDate asc",
+						ComplexityHistory.class)
+				.setParameter("projectId", request.getProjectId())
 				.setParameter("className", request.getClassName())
 				.getResultList();
-		
 
 		return new ComplexityMetricPerClassBarData(history);
 	}

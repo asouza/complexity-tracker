@@ -26,29 +26,21 @@ public class GenerateHistoryController {
 	private EntityManager manager;
 	@Autowired
 	private TransactionTemplate tx;
-	
+
 	private static final Logger log = LoggerFactory
 			.getLogger(GenerateHistoryController.class);
 
-
 	@PostMapping(value = "/generate-history")
 	public String generate(@Valid GenerateHistoryRequest request) {
-		/*
-		 * List.of(
-							"6ce7a80199e2fde9a4eeae6f1793188e6c3fd007",
-							"f74be96dada91d6d15cc7c3954050e4133de16bf",
-							"6e0f2a66647a6471db1df01ac133435ef03dae66")
-		 */		
-		
+
 		List<String> hashes = request.parseCommitsHashes();
-		log.debug("Let's generate history for {} commits {} ",hashes.size(),hashes);
-		
+		log.debug("Let's generate history for {} commits {} ", hashes.size(),
+				hashes);
+
 		InMemoryComplexityHistoryWriter inMemoryWriter = new InMemoryComplexityHistoryWriter();
 		new RepoDriller().start(() -> {
 			new RepositoryMining()
-					.in(GitRepository.singleProject(
-							request.getLocalGitPath()))
-
+					.in(GitRepository.singleProject(request.getLocalGitPath()))
 					.through(Commits.list(hashes))
 					.process(new HistoryVisitor(request.getProjectId()),
 							inMemoryWriter)
@@ -56,10 +48,14 @@ public class GenerateHistoryController {
 		});
 
 		tx.executeWithoutResult(status -> {
+			manager.createQuery(
+					"delete from ComplexityHistory c where c.projectId = :projectId")
+					.setParameter("projectId", request.getProjectId())
+					.executeUpdate();
 			inMemoryWriter.getHistory().forEach(manager::persist);
 		});
-		
-		return "redirect:/..."; 
+
+		return "redirect:/...";
 
 	}
 
