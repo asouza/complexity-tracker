@@ -20,7 +20,7 @@ public class ComplexityMetricPerClassBarData {
 				//1
 				.map(ComplexityHistory::getCommitDate)
 				//1
-				.map(date -> date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+				.map(date -> date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy kk:mm")))
 				//1
 				.collect(Collectors.toCollection(() -> new LinkedHashSet<>())));
 		
