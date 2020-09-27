@@ -37,7 +37,7 @@ public class ComplexityHistoryByClassGroupedBarReportController {
 			//1
 			SearchComplexityHistoryByClassRequest request) {
 		model.addAttribute("classes", manager.createQuery(
-				"select c.className from ComplexityHistory c where c.projectId = :projectId group by c.className order by sum(c.loc) desc")
+				"select c.className from ComplexityHistory c where c.projectId = :projectId group by c.className order by avg(c.loc) desc")
 				.setParameter("projectId", request.getProjectId())
 				.getResultList());
 		return "complexity-by-class";

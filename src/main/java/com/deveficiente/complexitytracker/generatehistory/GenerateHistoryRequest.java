@@ -1,15 +1,14 @@
 package com.deveficiente.complexitytracker.generatehistory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Stream;
 
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.util.StringUtils;
+import org.repodriller.filter.range.CommitRange;
+import org.repodriller.filter.range.Commits;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class GenerateHistoryRequest {
 
@@ -21,6 +20,10 @@ public class GenerateHistoryRequest {
 	private String localGitPath;
 	@NotBlank
 	private String javaFilesFolderPath;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Calendar startDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Calendar endDate;
 
 	public GenerateHistoryRequest(@NotBlank String commitHashes,
 			@NotBlank String projectId, @NotBlank String localGitPath,
@@ -30,6 +33,14 @@ public class GenerateHistoryRequest {
 		this.projectId = projectId;
 		this.localGitPath = localGitPath;
 		this.javaFilesFolderPath = javaFilesFolderPath;
+	}
+	
+	public void setStartDate(Calendar startDate) {
+		this.startDate = startDate;
+	}
+	
+	public void setEndDate(Calendar endDate) {
+		this.endDate = endDate;
 	}
 	
 	public String getJavaFilesFolderPath() {
@@ -50,5 +61,9 @@ public class GenerateHistoryRequest {
 		return Arrays.asList(hashes);
 		
 	}
+	
+	public CommitRange getCommitRange() {
+		return Commits.betweenDates(startDate, endDate);
+	}	
 
 }
