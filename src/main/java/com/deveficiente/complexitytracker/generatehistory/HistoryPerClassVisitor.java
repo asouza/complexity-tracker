@@ -59,10 +59,13 @@ class HistoryPerClassVisitor implements CommitVisitor {
 			}).findFirst();
 
 			if(modificationToTargetClass.isPresent()) {
-				log.debug("Analyzing {}",modificationToTargetClass.get().getNewPath());
-				System.out.println("Analyzing "+modificationToTargetClass.get().getNewPath());
+				String pathToFile = repo.getPath()+"/"+modificationToTargetClass.get().getNewPath();
+				log.debug("Analyzing {}",pathToFile);
+				System.out.println("Analyzing "+pathToFile);
+				
+				
 				CK ck = new CK(false, 0, false);
-				ck.calculate(modificationToTargetClass.get().getNewPath(), result -> {
+				ck.calculate(pathToFile, result -> {
 					//roda numa thread separada...
 					ComplexityHistory newHistory = new ComplexityHistory(projectId,commit,result);
 					writer.write(newHistory);

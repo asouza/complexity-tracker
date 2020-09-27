@@ -90,9 +90,7 @@ public class GenerateHistoryController {
 			.in(GitRepository.singleProject(request.getLocalGitPath()))
 			.through(request.getCommitRange())
 			.filters(commit -> {
-				System.out.println(commit.getMsg());
 				return commit.getModifications().stream().anyMatch(modification -> {
-					System.out.println(modification.getFileName());
 					return modification.getFileName().startsWith(request.getSimpleClassName());
 				});
 			})
