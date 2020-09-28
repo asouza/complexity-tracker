@@ -12,7 +12,7 @@ At this this time only java project can be analyzed.
 * Clone the project
 * You should have java and mysql installed
 * Clone https://github.com/mauricioaniche/ck
-  * After cloned, you need to execute mvn install --skipTests
+  * After cloned, you need to execute mvn install -DskipTests
 * Go to application.properties and change username and password :P
 * Run com.deveficiente.complexitytracker.ComplexityTrackerApplication
 * Send a post for http://localhost:8080/generate-history with:
