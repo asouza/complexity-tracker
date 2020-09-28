@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
@@ -38,7 +39,7 @@ public class GenerateHistoryController {
 	@PostMapping(value = "/generate-history")
 	// 1
 	@ResponseBody
-	public ResponseEntity<?> generate(@Valid GenerateHistoryRequest request,
+	public ResponseEntity<?> generate(@Valid @RequestBody GenerateHistoryRequest request,
 			UriComponentsBuilder uriComponent) {
 
 		List<String> hashes = request.parseCommitsHashes();
