@@ -54,6 +54,7 @@ public class GenerateHistoryController {
 					.visitorsAreThreadSafe(true)
 					.visitorsChangeRepoState(true)
 					.through(request.getCommitRange())
+					.withThreads()
 					// 1
 					.process(new HistoryVisitor(request.getProjectId(),request.getJavaFilesFolderPath()),
 							inMemoryWriter)
