@@ -51,6 +51,8 @@ public class GenerateHistoryController {
 		new RepoDriller().start(() -> {
 			new RepositoryMining()
 					.in(GitRepository.singleProject(request.getLocalGitPath()))
+					.visitorsAreThreadSafe(true)
+					.visitorsChangeRepoState(true)
 					.through(request.getCommitRange())
 					// 1
 					.process(new HistoryVisitor(request.getProjectId(),request.getJavaFilesFolderPath()),
