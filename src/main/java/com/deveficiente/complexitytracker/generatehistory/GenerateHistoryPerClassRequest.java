@@ -1,19 +1,16 @@
 package com.deveficiente.complexitytracker.generatehistory;
 
-import java.sql.Date;
 import java.util.Calendar;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
 
 import org.repodriller.RepositoryMining;
-import org.repodriller.filter.range.CommitRange;
 import org.repodriller.filter.range.Commits;
 import org.repodriller.persistence.PersistenceMechanism;
 import org.repodriller.scm.GitRepository;
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class GenerateHistoryPerClassRequest {
+public class GenerateHistoryPerClassRequest implements HasProjectId {
 
 	@NotBlank
 	private String projectId;

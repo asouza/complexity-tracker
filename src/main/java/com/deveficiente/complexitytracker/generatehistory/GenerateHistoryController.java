@@ -22,12 +22,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Controller
 //13
 //9
+//6
 public class GenerateHistoryController {
 
-	@Autowired
-	private EntityManager manager;
-	@Autowired
-	private TransactionTemplate tx;
+	//1
+	@Autowired	
+	private GenerateComplexyHistory generateComplexyHistory;
 
 	@PostMapping(value = "/generate-history")
 	// 1
@@ -42,16 +42,8 @@ public class GenerateHistoryController {
 		new RepoDriller().start(() -> {
 			request.toMining(inMemoryWriter).mine();
 		});
-
-		// 1
-		tx.executeWithoutResult(status -> {
-			manager.createQuery(
-					"delete from ComplexityHistory c where c.projectId = :projectId")
-					.setParameter("projectId", request.getProjectId())
-					.executeUpdate();
-			// 1
-			inMemoryWriter.getHistory().forEach(manager::persist);
-		});
+		
+		generateComplexyHistory.execute(request,inMemoryWriter.getHistory());
 
 		URI complexityHistoryGroupedReportUri = uriComponent.path(
 				"/reports/pages/complexity-by-class?projectId={projectId}")
@@ -73,15 +65,7 @@ public class GenerateHistoryController {
 			request.toMining(inMemoryWriter).mine();
 		});
 		
-		// 1
-		tx.executeWithoutResult(status -> {
-			manager.createQuery(
-					"delete from ComplexityHistory c where c.projectId = :projectId")
-			.setParameter("projectId", request.getProjectId())
-			.executeUpdate();
-			// 1
-			inMemoryWriter.getHistory().forEach(manager::persist);
-		});
+		generateComplexyHistory.execute(request,inMemoryWriter.getHistory());
 		
 		URI complexityHistoryGroupedReportUri = uriComponent.path(
 				"/reports/pages/complexity-by-class?projectId={projectId}")
