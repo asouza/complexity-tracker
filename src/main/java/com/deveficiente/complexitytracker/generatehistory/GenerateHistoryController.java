@@ -2,19 +2,12 @@ package com.deveficiente.complexitytracker.generatehistory;
 
 import java.net.URI;
 
-import javax.persistence.EntityManager;
 import javax.validation.Valid;
 
 import org.repodriller.RepoDriller;
-import org.repodriller.RepositoryMining;
-import org.repodriller.Study;
-import org.repodriller.scm.GitRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -28,6 +21,7 @@ public class GenerateHistoryController {
 	//1
 	@Autowired	
 	private GenerateComplexyHistory generateComplexyHistory;
+	
 
 	@PostMapping(value = "/generate-history")
 	// 1
