@@ -6,8 +6,11 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
+import org.repodriller.RepositoryMining;
 import org.repodriller.filter.range.CommitRange;
 import org.repodriller.filter.range.Commits;
+import org.repodriller.persistence.PersistenceMechanism;
+import org.repodriller.scm.GitRepository;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class GenerateHistoryRequest {
@@ -34,20 +37,21 @@ public class GenerateHistoryRequest {
 		this.endDate = endDate;
 	}
 
-	public String getJavaFilesFolderPath() {
-		return javaFilesFolderPath;
-	}
+	public RepositoryMining toMining(PersistenceMechanism persistence) {
+		return new RepositoryMining()
+		.in(GitRepository.singleProject(this.localGitPath))
+		.visitorsAreThreadSafe(true)
+		.visitorsChangeRepoState(true)
+		.through(Commits.betweenDates(startDate, endDate))
+		.withThreads()
+		// 1
+		.process(new HistoryVisitor(this.projectId,this.javaFilesFolderPath),
+				persistence);
 
-	public String getLocalGitPath() {
-		return localGitPath;
 	}
 
 	public String getProjectId() {
-		return projectId;
-	}
-
-	public CommitRange getCommitRange() {
-		return Commits.betweenDates(startDate, endDate);
+		return getProjectId();
 	}
 
 }

@@ -21,15 +21,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
 //13
+//9
 public class GenerateHistoryController {
 
 	@Autowired
 	private EntityManager manager;
 	@Autowired
 	private TransactionTemplate tx;
-
-	private static final Logger log = LoggerFactory
-			.getLogger(GenerateHistoryController.class);
 
 	@PostMapping(value = "/generate-history")
 	// 1
@@ -40,27 +38,9 @@ public class GenerateHistoryController {
 		// 1
 		InMemoryComplexityHistoryWriter inMemoryWriter = new InMemoryComplexityHistoryWriter();
 		
-		Study newMining = RepositoryMiningBuilder
-			.singleProject(request.getLocalGitPath())
-			.through(request.getCommitRange())
-			.process(new HistoryVisitor(request.getProjectId(),request.getJavaFilesFolderPath()),inMemoryWriter)
-			.build();
-		
-		//1
-		new RepoDriller().start(newMining);
-		
 		//1
 		new RepoDriller().start(() -> {
-			new RepositoryMining()
-					.in(GitRepository.singleProject(request.getLocalGitPath()))
-					.visitorsAreThreadSafe(true)
-					.visitorsChangeRepoState(true)
-					.through(request.getCommitRange())
-					.withThreads()
-					// 1
-					.process(new HistoryVisitor(request.getProjectId(),request.getJavaFilesFolderPath()),
-							inMemoryWriter)
-					.mine();
+			request.toMining(inMemoryWriter).mine();
 		});
 
 		// 1
@@ -90,20 +70,7 @@ public class GenerateHistoryController {
 		InMemoryComplexityHistoryWriter inMemoryWriter = new InMemoryComplexityHistoryWriter();
 		// 1
 		new RepoDriller().start(() -> {
-			new RepositoryMining()
-			.in(GitRepository.singleProject(request.getLocalGitPath()))
-			.through(request.getCommitRange())
-			//1
-			.filters(commit -> {
-				//1
-				return commit.getModifications().stream().anyMatch(modification -> {
-					return modification.getFileName().startsWith(request.getSimpleClassName());
-				});
-			})
-			// 1
-			.process(new HistoryPerClassVisitor(request.getProjectId(), request.getSimpleClassName()),
-					inMemoryWriter)
-			.mine();
+			request.toMining(inMemoryWriter).mine();
 		});
 		
 		// 1
