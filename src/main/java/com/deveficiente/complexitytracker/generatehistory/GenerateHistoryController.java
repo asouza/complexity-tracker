@@ -1,22 +1,18 @@
 package com.deveficiente.complexitytracker.generatehistory;
 
 import java.net.URI;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.repodriller.RepoDriller;
 import org.repodriller.RepositoryMining;
-import org.repodriller.filter.range.Commits;
+import org.repodriller.Study;
 import org.repodriller.scm.GitRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
-//6
+//13
 public class GenerateHistoryController {
 
 	@Autowired
@@ -41,13 +37,19 @@ public class GenerateHistoryController {
 	public ResponseEntity<?> generate(@Valid GenerateHistoryRequest request,
 			UriComponentsBuilder uriComponent) {
 
-		List<String> hashes = request.parseCommitsHashes();
-		log.debug("Let's generate history for {} commits {} ", hashes.size(),
-				hashes);
-
 		// 1
 		InMemoryComplexityHistoryWriter inMemoryWriter = new InMemoryComplexityHistoryWriter();
-		// 1
+		
+		Study newMining = RepositoryMiningBuilder
+			.singleProject(request.getLocalGitPath())
+			.through(request.getCommitRange())
+			.process(new HistoryVisitor(request.getProjectId(),request.getJavaFilesFolderPath()),inMemoryWriter)
+			.build();
+		
+		//1
+		new RepoDriller().start(newMining);
+		
+		//1
 		new RepoDriller().start(() -> {
 			new RepositoryMining()
 					.in(GitRepository.singleProject(request.getLocalGitPath()))
@@ -85,14 +87,15 @@ public class GenerateHistoryController {
 	public ResponseEntity<?> generatePerClass(@Valid GenerateHistoryPerClassRequest request,
 			UriComponentsBuilder uriComponent) {
 		
-		// 1
 		InMemoryComplexityHistoryWriter inMemoryWriter = new InMemoryComplexityHistoryWriter();
 		// 1
 		new RepoDriller().start(() -> {
 			new RepositoryMining()
 			.in(GitRepository.singleProject(request.getLocalGitPath()))
 			.through(request.getCommitRange())
+			//1
 			.filters(commit -> {
+				//1
 				return commit.getModifications().stream().anyMatch(modification -> {
 					return modification.getFileName().startsWith(request.getSimpleClassName());
 				});

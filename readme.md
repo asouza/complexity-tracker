@@ -24,5 +24,5 @@ At this this time only java project can be analyzed.
 * After run, a 201 status should be returned with the first report url.
 	* Ex: http://localhost:8080/reports/pages/complexity-by-class%3FprojectId=ssp
 	* Change %3f for ? and go to the url 
- 
+	 
   
