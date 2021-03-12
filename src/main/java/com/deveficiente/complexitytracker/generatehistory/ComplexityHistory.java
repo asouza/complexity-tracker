@@ -68,6 +68,10 @@ public class ComplexityHistory {
 	public int getLoc() {
 		return loc;
 	}
+	
+	public String getClassName() {
+		return className;
+	}
 
 	@Override
 	public int hashCode() {
@@ -117,6 +121,10 @@ public class ComplexityHistory {
 		return "ComplexityHistory [projectId=" + projectId + ", hash=" + hash
 				+ ", commitDate=" + commitDate + ", className=" + className
 				+ ", loc=" + loc + "]";
+	}
+
+	public boolean wasCommitedAfter(ComplexityHistory earlier) {
+		return this.commitDate.isAfter(earlier.commitDate);
 	}
 	
 	

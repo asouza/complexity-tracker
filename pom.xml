@@ -24,8 +24,8 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>	
-	
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/br.com.aniche/ck -->
 		<!-- https://mvnrepository.com/artifact/com.github.mauricioaniche/ck -->
 		<dependency>
@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
-			<version>5.9.0.202009080501-r</version>
+			<version>4.8.0.201706111038-r</version>
 		</dependency>
 
 
@@ -94,6 +94,14 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-csv -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.8</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

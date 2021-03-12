@@ -19,6 +19,19 @@ import org.springframework.util.Assert;
 
 import com.github.mauricioaniche.ck.CK;
 
+/**
+ * 
+ * 
+ * 
+ * 
+ *  * Branch de código (if,else,loop,switch,ternario
+ *  					   ,try,catch)
+ *  * Acoplamento contextual. Este é o acoplamento com classes específicas do projeto
+ * 	* Passagem de função como argumento. 
+ * 
+ *
+ */
+
 class HistoryPerClassVisitor implements CommitVisitor {
 
 	private String projectId;
@@ -54,7 +67,10 @@ class HistoryPerClassVisitor implements CommitVisitor {
 			gitSsp.checkout().setName(commit.getHash())
 					.call();	
 			
-			Optional<Modification> modificationToTargetClass = commit.getModifications().stream().filter(modification -> {
+			Optional<Modification> modificationToTargetClass = commit
+					.getModifications()
+					.stream()
+					.filter(modification -> {
 				return modification.getFileName().startsWith(simpleClassName);
 			}).findFirst();
 
@@ -66,7 +82,6 @@ class HistoryPerClassVisitor implements CommitVisitor {
 				
 				CK ck = new CK(false, 0, false);
 				ck.calculate(pathToFile, result -> {
-					//roda numa thread separada...
 					ComplexityHistory newHistory = new ComplexityHistory(projectId,commit,result);
 					writer.write(newHistory);
 					log.debug("New history saved {}",newHistory);
