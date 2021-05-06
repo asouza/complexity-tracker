@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
-//13
-//9
-//6
+/*
+ * Metric
+ *  Branches - 1
+ *  Contextual coupling - 1
+ *  Function as argument - 1 
+ */
 public class GenerateHistoryController {
 
 	//1
@@ -24,15 +27,15 @@ public class GenerateHistoryController {
 	
 
 	@PostMapping(value = "/generate-history")
-	// 1
+	// 1 : GenerateHistoryRequest - Contextual Coupling
 	@ResponseBody
 	public ResponseEntity<?> generate(@Valid GenerateHistoryRequest request,
 			UriComponentsBuilder uriComponent) {
 
-		// 1
+		// 1 : InMemoryComplexityHistoryWriter - Contextual Coupling
 		InMemoryComplexityHistoryWriter inMemoryWriter = new InMemoryComplexityHistoryWriter();
 		
-		//1
+		//1 : function as an argument
 		new RepoDriller().start(() -> {
 			request.toMining(inMemoryWriter).mine();
 		});
@@ -48,13 +51,13 @@ public class GenerateHistoryController {
 	}
 	
 	@PostMapping(value = "/generate-history-class")
-	// 1
+	// 1 : GenerateHistoryPerClassRequest - Contextual Coupling
 	@ResponseBody
 	public ResponseEntity<?> generatePerClass(@Valid GenerateHistoryPerClassRequest request,
 			UriComponentsBuilder uriComponent) {
 		
 		InMemoryComplexityHistoryWriter inMemoryWriter = new InMemoryComplexityHistoryWriter();
-		// 1
+		//1 : function as an argument
 		new RepoDriller().start(() -> {
 			request.toMining(inMemoryWriter).mine();
 		});
