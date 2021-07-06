@@ -49,7 +49,7 @@ public class GenerateHistoryRequest implements HasProjectId {
 	}
 
 	public String getProjectId() {
-		return getProjectId();
+		return this.projectId;
 	}
 
 }
